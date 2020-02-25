@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Badge, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { authLoginAction } from "../actions/auth";
@@ -9,6 +9,12 @@ export default function HomePage() {
   const loading = useSelector(state => get(state, "auth.loading", false));
   const error = useSelector(state => get(state, "auth.error", null));
   const [email, setEmail] = useState("");
+  useEffect(() => {
+    if (localStorage.login) {
+      dispatch(authLoginAction(localStorage.login));
+    }
+  });
+
   const handleEmailChange = e => {
     setEmail(e.target.value);
   };

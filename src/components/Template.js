@@ -25,6 +25,9 @@ export default function Template({ children }) {
               <Nav.Link as={NavLink} to="/todo" exact>
                 To-do
               </Nav.Link>
+              <Nav.Link as={NavLink} to="/albums" exact>
+                albums
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

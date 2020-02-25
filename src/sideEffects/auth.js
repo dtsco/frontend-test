@@ -1,12 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { push } from "connected-react-router";
 import request from "../utils/request";
-import fakeAuth from "../fakeAuth";
 import {
   AUTH_LOGIN,
   authLoginSuccessAction,
   authLoginFailAction
 } from "../actions/auth";
+import { albumFetchAction } from "../actions/albums";
 
 export function* authSideEffect(action) {
   try {
@@ -16,9 +16,15 @@ export function* authSideEffect(action) {
       `http://localhost:3004/users?email=${email}`
     );
     if (data.length) {
-      fakeAuth.authenticate(data[0].id);
+      console.log(data);
+      localStorage.setItem("login", data[0].email);
       yield put(authLoginSuccessAction(data[0]));
-      yield put(push("/todo"));
+      if (action.direction === "albums") {
+        yield put(push("/albums"));
+        yield put(albumFetchAction());
+      } else {
+        yield put(push("/todo"));
+      } // nu, ya daje capsom ne budu pisat. ya veryu v tebya, zavtrashniy ya
     } else {
       /* eslint-disable no-throw-literal */
       throw "User not found.";

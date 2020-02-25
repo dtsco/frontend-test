@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import TodoPage from "./pages/Todo";
 import Template from "./components/Template";
 import PrivateRoute from "./components/PrivateRoute";
-import fakeAuth from "./fakeAuth";
+import { useSelector } from "react-redux";
+import { get } from "lodash";
+import AlbumsPage from "./pages/albums";
 
+console.log("localStorage", localStorage.login);
 function App() {
+  const data = useSelector(state => get(state, "auth.data", {}));
   return (
     <Template>
       <Switch>
@@ -15,7 +19,7 @@ function App() {
           exact
           path="/"
           render={({ location }) =>
-            fakeAuth.isAuthenticated ? (
+            data.id ? (
               <Redirect
                 to={{
                   pathname: "/todo",
@@ -33,9 +37,30 @@ function App() {
         <PrivateRoute path="/todo">
           <TodoPage />
         </PrivateRoute>
+        <Route path="/albums">
+          <AlbumsPage />
+        </Route>
       </Switch>
     </Template>
   );
 }
 
 export default App;
+/* not sure 
+<Route
+          path="/albums"
+          render={({ location }) =>
+            !data.id ? (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: location }
+                }}
+              />
+            ) : (
+              <AlbumsPage />
+            )
+          }
+        ></Route>
+
+*/

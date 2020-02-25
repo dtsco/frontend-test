@@ -3,6 +3,7 @@ import {
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGIN_FAIL
 } from "../actions/auth";
+import { EXIT } from "../actions/logout";
 
 const initialState = {
   loading: false,
@@ -29,6 +30,11 @@ export default function autheducer(state = initialState, action) {
         ...state,
         loading: false,
         error: action.error
+      };
+    case EXIT:
+      return {
+        ...state,
+        data: {}
       };
     default:
       return state;
