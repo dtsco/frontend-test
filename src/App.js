@@ -46,10 +46,10 @@ function App() {
                                <Col><LoginPage/></Col>
                            )
                        }/>
-                 <Route path="/albums">
+                 <PrivateRoute path="/albums">
                      <Col><Albums/></Col>
                      <Modal/>
-                 </Route>
+                 </PrivateRoute>
                 <PrivateRoute path="/todo">
                     <Col md={4}><Info dispatch={dispatch}/></Col>
                     <Col md={8}><TodoPage/></Col>
