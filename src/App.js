@@ -1,41 +1,63 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import {Switch, Route, Redirect } from "react-router-dom";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import TodoPage from "./pages/Todo";
 import Template from "./components/Template";
 import PrivateRoute from "./components/PrivateRoute";
-import fakeAuth from "./fakeAuth";
+import {useDispatch, useSelector} from "react-redux";
+import {get} from "lodash";
+import Info from "./containers/Info";
+import Albums from "./pages/Albums";
+import  Modal from './components/ModalInfo'
+import { Col } from "react-bootstrap";
+import Context from './context'
 
 function App() {
-  return (
-    <Template>
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={({ location }) =>
-            fakeAuth.isAuthenticated ? (
-              <Redirect
-                to={{
-                  pathname: "/todo",
-                  state: { from: location }
-                }}
-              />
-            ) : (
-              <HomePage />
-            )
-          }
-        />
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <PrivateRoute path="/todo">
-          <TodoPage />
-        </PrivateRoute>
-      </Switch>
-    </Template>
-  );
+    const isLogin = useSelector(state => get(state, "auth.isAuthenticated", false));
+    const dispatch = useDispatch();
+    return (
+        <Context.Provider value={{dispatch, isLogin}}>
+        <Template>
+            <Switch>
+                <Route
+                    exact
+                    path="/"
+                    render={({location}) =>
+                        isLogin ? (
+                            <Redirect
+                                to={{
+                                    pathname: "/todo",
+                                    state: {from: location}
+                                }}
+                            />
+                        ) : (
+                            <Col><HomePage/></Col>
+                        )
+                    }
+                />
+                <Route path="/login"
+                       render={() =>
+                           isLogin ? (
+                               <Redirect
+                                   to='/todo'
+                               />
+                           ) : (
+                               <Col><LoginPage/></Col>
+                           )
+                       }/>
+                 <Route path="/albums">
+                     <Col><Albums/></Col>
+                     <Modal/>
+                 </Route>
+                <PrivateRoute path="/todo">
+                    <Col md={4}><Info dispatch={dispatch}/></Col>
+                    <Col md={8}><TodoPage/></Col>
+                </PrivateRoute>
+            </Switch>
+        </Template>
+        </Context.Provider>
+    );
 }
 
 export default App;

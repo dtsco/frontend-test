@@ -1,23 +1,24 @@
-import React from "react";
-import { Route, Redirect } from "react-router-dom";
-import fakeAuth from "../fakeAuth";
+import React, {useContext} from "react";
+import {Route, Redirect} from "react-router-dom";
+import Context from "../context";
 
-export default function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        fakeAuth.isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: location }
-            }}
-          />
-        )
-      }
-    />
-  );
+export default function PrivateRoute({children, ...rest}) {
+    const {isLogin} = useContext(Context)
+    return (
+        <Route
+            {...rest}
+            render={({location}) =>
+                isLogin ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {from: location}
+                        }}
+                    />
+                )
+            }
+        />
+    );
 }

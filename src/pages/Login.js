@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { Form, Button, Badge, Alert } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { authLoginAction } from "../actions/auth";
 import { get } from "lodash";
+import Context from "../context";
 
 export default function HomePage() {
-  const dispatch = useDispatch();
+  const {dispatch} = useContext(Context)
   const loading = useSelector(state => get(state, "auth.loading", false));
   const error = useSelector(state => get(state, "auth.error", null));
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export default function HomePage() {
   };
   return (
     <Form onSubmit={handleLogin}>
-      {error ? <Alert variant="danger">{error}</Alert> : null}
+      {error ? <Alert variant="danger">{error.toString()}</Alert> : null}
       <Form.Group controlId="formEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
