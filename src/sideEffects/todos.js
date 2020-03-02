@@ -7,14 +7,25 @@ import {
   todoFetchFailAction
 } from "../actions/todos";
 
-export function* todosSideEffect(action) {
+export function* todosSideEffect() {
   try {
     const userId = yield select(state => get(state, "auth.data.id", ""));
-    const data = yield call(
-      request,
-      `http://localhost:3004/todos?userId=${userId}`
-    );
-    yield put(todoFetchSuccessAction(data));
+    const userIdSaveLocal = yield JSON.parse(localStorage.getItem('isLogin')).id
+
+    if(localStorage.getItem(('isLogin')) !== null) {
+      const data = yield call(
+          request,
+          `http://localhost:3004/todos?userId=${userIdSaveLocal}`
+      );
+      yield put(todoFetchSuccessAction(data));
+    }
+    else {
+      const data = yield call(
+          request,
+          `http://localhost:3004/todos?userId=${userId}`
+      );
+      yield put(todoFetchSuccessAction(data));
+    }
   } catch (e) {
     yield put(todoFetchFailAction(e));
   }

@@ -1,11 +1,12 @@
-import React from "react";
-import { Container, Navbar, Row, Col, Nav } from "react-bootstrap";
+import React, {useContext} from "react";
+import { Container, Navbar, Row,  Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
-import Info from "../containers/Info";
 import logoSrc from "./logo.png";
 import "./Template.css";
+import Context from "../context";
 
 export default function Template({ children }) {
+  const {isLogin} = useContext(Context)
   return (
     <Container>
       <header className="header">
@@ -25,16 +26,18 @@ export default function Template({ children }) {
               <Nav.Link as={NavLink} to="/todo" exact>
                 To-do
               </Nav.Link>
+              {
+                isLogin && <Nav.Link as={NavLink} to="/albums">
+                  Albums
+                </Nav.Link>
+              }
             </Nav>
           </Navbar.Collapse>
         </Navbar>
       </header>
       <main>
         <Row>
-          <Col md={4}>
-            <Info />
-          </Col>
-          <Col md={8}>{children}</Col>
+          {children}
         </Row>
       </main>
     </Container>
